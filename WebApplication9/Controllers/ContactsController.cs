@@ -40,10 +40,10 @@ namespace WebApplication9.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
-        public async Task<IActionResult> UpdateContact([FromRoute] Guid id,UpdateContactRequest updateContactRequest)
+        public async Task<IActionResult> UpdateContact([FromRoute] Guid id, UpdateContactRequest updateContactRequest)
         {
             var dbcontact = await dbContext.Contacts.FindAsync(id);
-            if(dbcontact == null)
+            if (dbcontact == null)
             {
                 return BadRequest("not found");
             }
@@ -55,6 +55,32 @@ namespace WebApplication9.Controllers
             await dbContext.SaveChangesAsync();
             return Ok(dbContext);
 
+        }
+
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> DeleteContact([FromRoute] Guid id)
+        {
+            var dbContact = await dbContext.Contacts.FindAsync(id);
+            if(dbContact == null)
+            {
+                return BadRequest("not found");
+            }
+             dbContext.Contacts.Remove(dbContact);
+             dbContext.SaveChanges();
+            return Ok(dbContext);
+        }
+
+        [HttpGet]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> GetContactById([FromRoute]Guid id)
+        {
+            var contact = await dbContext.Contacts.FindAsync(id);
+            if(contact == null)
+            {
+                return BadRequest("not found");
+            }
+            return Ok(contact);
         }
     }
 }
